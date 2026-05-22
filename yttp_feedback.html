@@ -29,7 +29,6 @@
     flex-direction: column;
   }
 
-  /* ---- HEADER ---- */
   .header {
     padding: 24px 24px 0;
     display: flex;
@@ -66,7 +65,6 @@
     display: inline-block;
   }
 
-  /* ---- MAIN ---- */
   .container {
     flex: 1;
     padding: 32px 24px 40px;
@@ -92,7 +90,6 @@
     color: var(--anthracite);
   }
 
-  /* ---- STARS ---- */
   .section-label {
     font-size: 10px;
     letter-spacing: 0.14em;
@@ -130,10 +127,7 @@
   .star.active svg path { fill: var(--off-white); }
   .star:not(.active) svg path { fill: none; stroke: var(--light-gray); stroke-width: 1.5; }
 
-  /* ---- QUESTIONS ---- */
-  .question-block {
-    margin-bottom: 24px;
-  }
+  .question-block { margin-bottom: 24px; }
 
   .question-text {
     font-size: 13px;
@@ -168,7 +162,6 @@
     color: var(--off-white);
   }
 
-  /* ---- COMMENT ---- */
   .comment-block { margin-bottom: 32px; }
 
   textarea {
@@ -189,7 +182,6 @@
   textarea::placeholder { color: var(--taupe); }
   textarea:focus { border-color: var(--anthracite); }
 
-  /* ---- SUBMIT ---- */
   .submit-btn {
     width: 100%;
     font-family: var(--font);
@@ -209,14 +201,6 @@
   .submit-btn:hover { background: #333; }
   .submit-btn:disabled { background: var(--light-gray); color: var(--taupe); cursor: not-allowed; }
 
-  .submit-btn.loading::after {
-    content: '...';
-    animation: dots 1s steps(3) infinite;
-  }
-
-  @keyframes dots { 0% { content: '.'; } 33% { content: '..'; } 66% { content: '...'; } }
-
-  /* ---- SUCCESS ---- */
   .success-screen {
     display: none;
     flex: 1;
@@ -252,7 +236,6 @@
     line-height: 1.6;
   }
 
-  /* ---- ERROR ---- */
   .error-msg {
     font-size: 11px;
     color: var(--orange);
@@ -262,7 +245,6 @@
 
   .error-msg.visible { display: block; }
 
-  /* ---- DIVIDER ---- */
   .divider {
     width: 24px;
     height: 1px;
@@ -270,7 +252,6 @@
     margin: 0 0 28px;
   }
 
-  /* ---- LOADING STATE ---- */
   .loading-screen {
     flex: 1;
     display: flex;
@@ -290,7 +271,6 @@
 
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ---- ADMIN PANEL (QR Generator) ---- */
   .admin-panel {
     display: none;
     background: white;
@@ -334,62 +314,31 @@
 
   .qr-code-box { margin-bottom: 8px; }
   .qr-url { font-size: 9px; color: var(--taupe); word-break: break-all; }
-
-  /* ---- CONFIG NOTICE ---- */
-  .config-notice {
-    background: #fffbe6;
-    border: 1px solid #f0d060;
-    padding: 14px 16px;
-    font-size: 12px;
-    line-height: 1.6;
-    color: #7a6000;
-    margin-bottom: 24px;
-  }
-
-  .config-notice code {
-    background: rgba(0,0,0,0.08);
-    padding: 1px 5px;
-    font-family: monospace;
-    font-size: 11px;
-  }
 </style>
 </head>
 <body>
 
-<!-- ============================================================
-     KONFIGURATION — hier eintragen
-     ============================================================ -->
 <script>
-  // !! ANPASSEN vor dem Deployment !!
-  const SUPABASE_URL = 'https://DEIN-PROJEKT.supabase.co';
-  const SUPABASE_ANON_KEY = 'DEIN-ANON-KEY';
-
-  // Base-URL dieser Seite (für QR-Code-Generator)
+  const SUPABASE_URL = 'https://sjnrqfqjfqpdjhukgiue.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNqbnJxZnFqZnFwZGpodWtnaXVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0MTE5NjcsImV4cCI6MjA5NDk4Nzk2N30.cR9HqaON5Etue_98684Vb68slCZtOD2FW13qAY4ALd8';
   const FEEDBACK_BASE_URL = 'https://feedback.yttp.de';
 </script>
 
-<!-- ============================================================
-     FEEDBACK FORMULAR
-     ============================================================ -->
 <div id="feedback-app">
-
   <div class="header">
     <div class="logo">YTTP</div>
     <div class="anon-badge">Anonym</div>
   </div>
 
-  <!-- Loading -->
   <div id="loading-screen" class="loading-screen">
     <div class="spinner"></div>
   </div>
 
-  <!-- Formular -->
   <div id="form-screen" class="container" style="display:none">
     <div class="studio-label" id="studio-label">Studio</div>
     <div class="headline">Wie war dein Kurs?</div>
     <div class="divider"></div>
 
-    <!-- Sterne -->
     <div class="section-label">Bewertung</div>
     <div class="stars-row" id="stars-row">
       <button class="star" data-val="1" onclick="setStar(1)" aria-label="1 Stern">
@@ -409,21 +358,18 @@
       </button>
     </div>
 
-    <!-- Frage 1 -->
     <div class="question-block" id="q1-block" style="display:none">
       <div class="section-label">Frage 1</div>
       <div class="question-text" id="q1-text"></div>
       <div class="options-row" id="q1-options"></div>
     </div>
 
-    <!-- Frage 2 -->
     <div class="question-block" id="q2-block" style="display:none">
       <div class="section-label">Frage 2</div>
       <div class="question-text" id="q2-text"></div>
       <div class="options-row" id="q2-options"></div>
     </div>
 
-    <!-- Kommentar -->
     <div class="comment-block">
       <div class="section-label">Kommentar (optional)</div>
       <textarea id="comment-field" placeholder="Was hat dir besonders gut gefallen? Was könnten wir verbessern?"></textarea>
@@ -433,7 +379,6 @@
     <div class="error-msg" id="error-msg">Etwas ist schiefgelaufen. Bitte versuche es erneut.</div>
   </div>
 
-  <!-- Success -->
   <div id="success-screen" class="success-screen">
     <div class="success-mark">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1C1C1C" stroke-width="1.5">
@@ -443,33 +388,20 @@
     <div class="success-title">Danke für dein Feedback.</div>
     <div class="success-sub">Es hilft uns, jeden Kurs<br>besser zu machen.</div>
   </div>
-
 </div>
 
-<!-- ============================================================
-     ADMIN — QR-Code Generator (nur bei ?admin=1)
-     ============================================================ -->
 <div id="admin-panel" class="admin-panel">
   <div class="admin-title">QR-Code Generator — YTTP Studios</div>
-  <div class="config-notice">
-    Trage in dieser Datei oben <code>FEEDBACK_BASE_URL</code> ein,<br>
-    dann zeigen die QR-Codes auf die richtige URL.
-  </div>
   <div id="qr-grid" class="qr-grid"></div>
 </div>
 
-<!-- ============================================================
-     SCRIPT
-     ============================================================ -->
 <script>
-  // ---- State ----
   let studioData = null;
   let questionsData = [];
   let selectedStars = 0;
   let selectedQ1 = null;
   let selectedQ2 = null;
 
-  // Feste Antwortoptionen pro Frage-Typ (passen zu den Beispielfragen im SQL)
   const ANSWER_OPTIONS = {
     'Wie war die Intensität des Kurses für dich?': ['Zu leicht', 'Genau richtig', 'Sehr fordernd'],
     'Hat dir die Anleitung durch den Coach geholfen?': ['Sehr hilfreich', 'In Ordnung', 'Weniger hilfreich'],
@@ -479,51 +411,34 @@
     'Hat die Struktur des Kurses für dich gepasst?': ['Ja', 'Teilweise', 'Nein'],
   };
 
-  // Fallback-Optionen für neue/unbekannte Fragen
   const DEFAULT_OPTIONS = ['Ja', 'Teilweise', 'Nein'];
 
-  // ---- Init ----
   async function init() {
     const params = new URLSearchParams(window.location.search);
     const slug = params.get('studio');
     const isAdmin = params.get('admin') === '1';
 
-    if (isAdmin) {
-      showAdminPanel();
-      return;
-    }
-
-    if (!slug) {
-      showError('Kein Studio angegeben. Bitte scanne den QR-Code im Studio.');
-      return;
-    }
+    if (isAdmin) { showAdminPanel(); return; }
+    if (!slug) { showError('Kein Studio angegeben. Bitte scanne den QR-Code im Studio.'); return; }
 
     await loadStudioAndQuestions(slug);
   }
 
   async function loadStudioAndQuestions(slug) {
     try {
-      // Studio laden
       const studioRes = await fetch(
         `${SUPABASE_URL}/rest/v1/studios?slug=eq.${encodeURIComponent(slug)}&select=*`,
         { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
       );
       const studios = await studioRes.json();
-
-      if (!studios.length) {
-        showError('Studio nicht gefunden.');
-        return;
-      }
-
+      if (!studios.length) { showError('Studio nicht gefunden.'); return; }
       studioData = studios[0];
 
-      // Fragen laden
       const questionsRes = await fetch(
         `${SUPABASE_URL}/rest/v1/questions?studio_type=eq.${encodeURIComponent(studioData.type)}&active=eq.true&order=position.asc&select=*`,
         { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
       );
       questionsData = await questionsRes.json();
-
       renderForm();
     } catch (e) {
       showError('Verbindungsfehler. Bitte versuche es erneut.');
@@ -540,12 +455,9 @@
       const block = document.getElementById(`q${n}-block`);
       const textEl = document.getElementById(`q${n}-text`);
       const optionsEl = document.getElementById(`q${n}-options`);
-
       if (!block) return;
-
       textEl.textContent = q.label;
       block.style.display = 'block';
-
       const opts = ANSWER_OPTIONS[q.label] || DEFAULT_OPTIONS;
       opts.forEach(opt => {
         const btn = document.createElement('button');
@@ -557,7 +469,6 @@
     });
   }
 
-  // ---- Interactions ----
   function setStar(val) {
     selectedStars = val;
     document.querySelectorAll('.star').forEach(s => {
@@ -573,18 +484,15 @@
     });
   }
 
-  // ---- Submit ----
   async function submitFeedback() {
     if (!selectedStars) {
       document.getElementById('error-msg').textContent = 'Bitte gib eine Sternebewertung ab.';
       document.getElementById('error-msg').classList.add('visible');
       return;
     }
-
     const btn = document.getElementById('submit-btn');
     btn.disabled = true;
-    btn.classList.add('loading');
-    btn.textContent = 'Wird gesendet';
+    btn.textContent = 'Wird gesendet...';
 
     const payload = {
       studio_id: studioData.id,
@@ -606,32 +514,25 @@
         },
         body: JSON.stringify(payload),
       });
-
       if (!res.ok) throw new Error('API error');
-
       document.getElementById('form-screen').style.display = 'none';
       document.getElementById('success-screen').classList.add('visible');
-
     } catch (e) {
       btn.disabled = false;
-      btn.classList.remove('loading');
       btn.textContent = 'Feedback senden';
       document.getElementById('error-msg').textContent = 'Etwas ist schiefgelaufen. Bitte versuche es erneut.';
       document.getElementById('error-msg').classList.add('visible');
     }
   }
 
-  // ---- Error Fallback ----
   function showError(msg) {
     document.getElementById('loading-screen').innerHTML =
       `<div style="text-align:center;padding:24px;font-size:13px;color:var(--taupe)">${msg}</div>`;
   }
 
-  // ---- Admin: QR Generator ----
   async function showAdminPanel() {
     document.getElementById('feedback-app').style.display = 'none';
     document.getElementById('admin-panel').classList.add('visible');
-
     try {
       const res = await fetch(
         `${SUPABASE_URL}/rest/v1/studios?select=*&order=name.asc`,
@@ -639,7 +540,6 @@
       );
       const studios = await res.json();
       const grid = document.getElementById('qr-grid');
-
       studios.forEach(s => {
         const url = `${FEEDBACK_BASE_URL}?studio=${s.slug}`;
         const card = document.createElement('div');
@@ -650,7 +550,6 @@
           <div class="qr-url">${url}</div>
         `;
         grid.appendChild(card);
-
         setTimeout(() => {
           new QRCode(document.getElementById(`qr-${s.id}`), {
             text: url, width: 128, height: 128,
@@ -663,7 +562,6 @@
     }
   }
 
-  // ---- Start ----
   init();
 </script>
 </body>
