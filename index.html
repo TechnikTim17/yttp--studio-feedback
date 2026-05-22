@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>YTTP – Feedback</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
 
@@ -162,6 +161,22 @@
     color: var(--off-white);
   }
 
+  .text-input {
+    width: 100%;
+    font-family: var(--font);
+    font-size: 13px;
+    color: var(--anthracite);
+    background: transparent;
+    border: 1px solid var(--light-gray);
+    padding: 12px 14px;
+    outline: none;
+    transition: border-color 0.15s;
+    line-height: 1.5;
+  }
+
+  .text-input::placeholder { color: var(--taupe); }
+  .text-input:focus { border-color: var(--anthracite); }
+
   .comment-block { margin-bottom: 32px; }
 
   textarea {
@@ -270,50 +285,6 @@
   }
 
   @keyframes spin { to { transform: rotate(360deg); } }
-
-  .admin-panel {
-    display: none;
-    background: white;
-    padding: 32px 24px;
-    max-width: 560px;
-    margin: 0 auto;
-    font-family: var(--font);
-  }
-
-  .admin-panel.visible { display: block; }
-
-  .admin-title {
-    font-size: 11px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    font-weight: 600;
-    margin-bottom: 24px;
-    color: var(--anthracite);
-  }
-
-  .qr-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    margin-top: 24px;
-  }
-
-  .qr-card {
-    border: 1px solid var(--light-gray);
-    padding: 20px;
-    text-align: center;
-  }
-
-  .qr-card-name {
-    font-size: 10px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--taupe);
-    margin-bottom: 12px;
-  }
-
-  .qr-code-box { margin-bottom: 8px; }
-  .qr-url { font-size: 9px; color: var(--taupe); word-break: break-all; }
 </style>
 </head>
 <body>
@@ -321,7 +292,7 @@
 <script>
   const SUPABASE_URL = 'https://sjnrqfqjfqpdjhukgiue.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNqbnJxZnFqZnFwZGpodWtnaXVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0MTE5NjcsImV4cCI6MjA5NDk4Nzk2N30.cR9HqaON5Etue_98684Vb68slCZtOD2FW13qAY4ALd8';
-  const FEEDBACK_BASE_URL = 'https://feedback.yttp.de';
+  const FEEDBACK_BASE_URL = 'https://techniktim17.github.io/yttp--studio-feedback';
 </script>
 
 <div id="feedback-app">
@@ -339,8 +310,9 @@
     <div class="headline">Wie war dein Kurs?</div>
     <div class="divider"></div>
 
+    <!-- Sterne -->
     <div class="section-label">Bewertung</div>
-    <div class="stars-row" id="stars-row">
+    <div class="stars-row">
       <button class="star" data-val="1" onclick="setStar(1)" aria-label="1 Stern">
         <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
       </button>
@@ -358,25 +330,17 @@
       </button>
     </div>
 
-    <div class="question-block" id="q1-block" style="display:none">
-      <div class="section-label">Frage 1</div>
-      <div class="question-text" id="q1-text"></div>
-      <div class="options-row" id="q1-options"></div>
-    </div>
+    <!-- Dynamische Fragen werden hier eingefügt -->
+    <div id="questions-container"></div>
 
-    <div class="question-block" id="q2-block" style="display:none">
-      <div class="section-label">Frage 2</div>
-      <div class="question-text" id="q2-text"></div>
-      <div class="options-row" id="q2-options"></div>
-    </div>
-
+    <!-- Kommentar -->
     <div class="comment-block">
       <div class="section-label">Kommentar (optional)</div>
       <textarea id="comment-field" placeholder="Was hat dir besonders gut gefallen? Was könnten wir verbessern?"></textarea>
     </div>
 
     <button class="submit-btn" id="submit-btn" onclick="submitFeedback()">Feedback senden</button>
-    <div class="error-msg" id="error-msg">Etwas ist schiefgelaufen. Bitte versuche es erneut.</div>
+    <div class="error-msg" id="error-msg"></div>
   </div>
 
   <div id="success-screen" class="success-screen">
@@ -390,37 +354,29 @@
   </div>
 </div>
 
-<div id="admin-panel" class="admin-panel">
-  <div class="admin-title">QR-Code Generator — YTTP Studios</div>
-  <div id="qr-grid" class="qr-grid"></div>
-</div>
-
 <script>
   let studioData = null;
   let questionsData = [];
   let selectedStars = 0;
-  let selectedQ1 = null;
-  let selectedQ2 = null;
+  let answers = {};
 
+  // Antwortoptionen pro Frage (key = exakter Fragetext)
   const ANSWER_OPTIONS = {
-    'Wie war die Intensität des Kurses für dich?': ['Zu leicht', 'Genau richtig', 'Sehr fordernd'],
-    'Hat dir die Anleitung durch den Coach geholfen?': ['Sehr hilfreich', 'In Ordnung', 'Weniger hilfreich'],
-    'Wie war das Tempo des Kurses?': ['Zu langsam', 'Genau richtig', 'Zu schnell'],
-    'Würdest du diesen Kurs weiterempfehlen?': ['Ja, auf jeden Fall', 'Wahrscheinlich', 'Eher nicht'],
-    'Wie fordernd war das Training?': ['Zu leicht', 'Genau richtig', 'Sehr intensiv'],
-    'Hat die Struktur des Kurses für dich gepasst?': ['Ja', 'Teilweise', 'Nein'],
+    'Wie war das Tempo des Kurses für dich?': ['Optimal', 'Zu langsam', 'Zu schnell'],
+    'Würdest du diesen Kurs weiterempfehlen?': ['Ja', 'Nein'],
+    'Hat dir die Anleitung durch den Coach geholfen?': ['Ja, sehr', 'In Ordnung', 'Weniger'],
   };
 
-  const DEFAULT_OPTIONS = ['Ja', 'Teilweise', 'Nein'];
+  // Freitextfelder für diese Fragen
+  const FREETEXT_QUESTIONS = [
+    'Welchen Kurs hast du besucht?',
+    'Welche/r Trainer/in hat den Kurs geleitet?',
+  ];
 
   async function init() {
     const params = new URLSearchParams(window.location.search);
     const slug = params.get('studio');
-    const isAdmin = params.get('admin') === '1';
-
-    if (isAdmin) { showAdminPanel(); return; }
     if (!slug) { showError('Kein Studio angegeben. Bitte scanne den QR-Code im Studio.'); return; }
-
     await loadStudioAndQuestions(slug);
   }
 
@@ -450,22 +406,52 @@
     document.getElementById('form-screen').style.display = 'block';
     document.getElementById('studio-label').textContent = studioData.name;
 
+    const container = document.getElementById('questions-container');
+    container.innerHTML = '';
+
     questionsData.forEach((q, i) => {
-      const n = i + 1;
-      const block = document.getElementById(`q${n}-block`);
-      const textEl = document.getElementById(`q${n}-text`);
-      const optionsEl = document.getElementById(`q${n}-options`);
-      if (!block) return;
-      textEl.textContent = q.label;
-      block.style.display = 'block';
-      const opts = ANSWER_OPTIONS[q.label] || DEFAULT_OPTIONS;
-      opts.forEach(opt => {
-        const btn = document.createElement('button');
-        btn.className = 'option-btn';
-        btn.textContent = opt;
-        btn.onclick = () => selectOption(n, opt, optionsEl);
-        optionsEl.appendChild(btn);
-      });
+      const block = document.createElement('div');
+      block.className = 'question-block';
+
+      const label = document.createElement('div');
+      label.className = 'section-label';
+      label.textContent = `Frage ${i + 1}`;
+
+      const text = document.createElement('div');
+      text.className = 'question-text';
+      text.textContent = q.label;
+
+      block.appendChild(label);
+      block.appendChild(text);
+
+      if (FREETEXT_QUESTIONS.includes(q.label)) {
+        // Freitextfeld
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'text-input';
+        input.placeholder = 'Deine Antwort...';
+        input.addEventListener('input', () => { answers[q.id] = input.value.trim(); });
+        block.appendChild(input);
+      } else {
+        // Auswahlbuttons
+        const opts = ANSWER_OPTIONS[q.label] || ['Ja', 'Nein'];
+        const row = document.createElement('div');
+        row.className = 'options-row';
+        opts.forEach(opt => {
+          const btn = document.createElement('button');
+          btn.className = 'option-btn';
+          btn.textContent = opt;
+          btn.onclick = () => {
+            answers[q.id] = opt;
+            row.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+          };
+          row.appendChild(btn);
+        });
+        block.appendChild(row);
+      }
+
+      container.appendChild(block);
     });
   }
 
@@ -476,30 +462,30 @@
     });
   }
 
-  function selectOption(questionNum, val, container) {
-    if (questionNum === 1) selectedQ1 = val;
-    if (questionNum === 2) selectedQ2 = val;
-    container.querySelectorAll('.option-btn').forEach(b => {
-      b.classList.toggle('selected', b.textContent === val);
-    });
-  }
-
   async function submitFeedback() {
     if (!selectedStars) {
-      document.getElementById('error-msg').textContent = 'Bitte gib eine Sternebewertung ab.';
-      document.getElementById('error-msg').classList.add('visible');
+      const err = document.getElementById('error-msg');
+      err.textContent = 'Bitte gib eine Sternebewertung ab.';
+      err.classList.add('visible');
       return;
     }
+
     const btn = document.getElementById('submit-btn');
     btn.disabled = true;
     btn.textContent = 'Wird gesendet...';
+
+    // Antworten den Positionen zuordnen
+    const answersArray = questionsData.map(q => answers[q.id] || null);
 
     const payload = {
       studio_id: studioData.id,
       studio_slug: studioData.slug,
       stars: selectedStars,
-      answer_1: selectedQ1,
-      answer_2: selectedQ2,
+      answer_1: answersArray[0] || null,
+      answer_2: answersArray[1] || null,
+      answer_3: answersArray[2] || null,
+      answer_4: answersArray[3] || null,
+      answer_5: answersArray[4] || null,
       comment: document.getElementById('comment-field').value.trim() || null,
     };
 
@@ -520,46 +506,15 @@
     } catch (e) {
       btn.disabled = false;
       btn.textContent = 'Feedback senden';
-      document.getElementById('error-msg').textContent = 'Etwas ist schiefgelaufen. Bitte versuche es erneut.';
-      document.getElementById('error-msg').classList.add('visible');
+      const err = document.getElementById('error-msg');
+      err.textContent = 'Etwas ist schiefgelaufen. Bitte versuche es erneut.';
+      err.classList.add('visible');
     }
   }
 
   function showError(msg) {
     document.getElementById('loading-screen').innerHTML =
       `<div style="text-align:center;padding:24px;font-size:13px;color:var(--taupe)">${msg}</div>`;
-  }
-
-  async function showAdminPanel() {
-    document.getElementById('feedback-app').style.display = 'none';
-    document.getElementById('admin-panel').classList.add('visible');
-    try {
-      const res = await fetch(
-        `${SUPABASE_URL}/rest/v1/studios?select=*&order=name.asc`,
-        { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
-      );
-      const studios = await res.json();
-      const grid = document.getElementById('qr-grid');
-      studios.forEach(s => {
-        const url = `${FEEDBACK_BASE_URL}?studio=${s.slug}`;
-        const card = document.createElement('div');
-        card.className = 'qr-card';
-        card.innerHTML = `
-          <div class="qr-card-name">${s.name}</div>
-          <div class="qr-code-box" id="qr-${s.id}"></div>
-          <div class="qr-url">${url}</div>
-        `;
-        grid.appendChild(card);
-        setTimeout(() => {
-          new QRCode(document.getElementById(`qr-${s.id}`), {
-            text: url, width: 128, height: 128,
-            colorDark: '#1C1C1C', colorLight: '#F3F2EE',
-          });
-        }, 100);
-      });
-    } catch (e) {
-      document.getElementById('admin-panel').innerHTML += '<p style="color:var(--orange);font-size:12px">Fehler beim Laden der Studios.</p>';
-    }
   }
 
   init();
