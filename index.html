@@ -1,5 +1,4 @@
-
-<!DOCTYPE html>
+<meta charset="UTF-8">
 <html lang="de">
 <head>
 <meta charset="UTF-8">
@@ -65,6 +64,44 @@
     display: inline-block;
   }
 
+  .ticker-wrap {
+    background: var(--anthracite);
+    margin: 14px 0 0;
+    padding: 11px 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .ticker-track {
+    display: inline-flex;
+    animation: ticker 22s linear infinite;
+  }
+
+  .ticker-item {
+    display: inline-flex;
+    align-items: center;
+    font-size: 9.5px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--light-gray);
+    padding-right: 48px;
+  }
+
+  .ticker-dot {
+    width: 4px;
+    height: 4px;
+    background: var(--sage);
+    border-radius: 50%;
+    margin-right: 48px;
+    flex-shrink: 0;
+  }
+
+  @keyframes ticker {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
   .container {
     flex: 1;
     padding: 32px 24px 40px;
@@ -127,58 +164,70 @@
   .star.active svg path { fill: var(--off-white); }
   .star:not(.active) svg path { fill: none; stroke: var(--light-gray); stroke-width: 1.5; }
 
-  .question-block { margin-bottom: 24px; }
+  .question-block { margin-bottom: 28px; }
 
   .question-text {
     font-size: 13px;
     color: var(--anthracite);
-    margin-bottom: 10px;
+    margin-bottom: 14px;
     line-height: 1.5;
     font-weight: 400;
   }
 
-  .options-row {
+  .likert-row {
     display: flex;
+    flex-direction: column;
     gap: 8px;
-    flex-wrap: wrap;
   }
 
-  .option-btn {
-    font-family: var(--font);
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    padding: 8px 14px;
+  .likert-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    padding: 10px 14px;
     border: 1px solid var(--light-gray);
     background: transparent;
+    font-family: var(--font);
+    font-size: 12px;
+    letter-spacing: 0.04em;
     color: var(--anthracite);
-    cursor: pointer;
+    text-align: left;
     transition: border-color 0.15s, background 0.15s, color 0.15s;
     -webkit-tap-highlight-color: transparent;
+    width: 100%;
   }
 
-  .option-btn.selected {
+  .likert-option .dot {
+    width: 14px;
+    height: 14px;
+    border: 1px solid var(--light-gray);
+    border-radius: 50%;
+    flex-shrink: 0;
+    transition: border-color 0.15s, background 0.15s;
+  }
+
+  .likert-option.selected {
     border-color: var(--anthracite);
     background: var(--anthracite);
     color: var(--off-white);
   }
 
-  .text-input {
-    width: 100%;
-    font-family: var(--font);
-    font-size: 13px;
-    color: var(--anthracite);
-    background: transparent;
-    border: 1px solid var(--light-gray);
-    padding: 12px 14px;
-    outline: none;
-    transition: border-color 0.15s;
-    line-height: 1.5;
+  .likert-option.selected .dot {
+    border-color: var(--off-white);
+    background: var(--off-white);
   }
 
-  .text-input::placeholder { color: var(--taupe); }
-  .text-input:focus { border-color: var(--anthracite); }
+  .likert-val {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--taupe);
+    min-width: 14px;
+  }
 
-  .comment-block { margin-bottom: 32px; }
+  .likert-option.selected .likert-val {
+    color: var(--light-gray);
+  }
 
   textarea {
     width: 100%;
@@ -197,6 +246,8 @@
 
   textarea::placeholder { color: var(--taupe); }
   textarea:focus { border-color: var(--anthracite); }
+
+  .comment-block { margin-bottom: 32px; }
 
   .submit-btn {
     width: 100%;
@@ -293,13 +344,25 @@
 <script>
   const SUPABASE_URL = 'https://sjnrqfqjfqpdjhukgiue.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNqbnJxZnFqZnFwZGpodWtnaXVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0MTE5NjcsImV4cCI6MjA5NDk4Nzk2N30.cR9HqaON5Etue_98684Vb68slCZtOD2FW13qAY4ALd8';
-  const FEEDBACK_BASE_URL = 'https://techniktim17.github.io/yttp--studio-feedback';
 </script>
 
 <div id="feedback-app">
   <div class="header">
     <div class="logo">YTTP</div>
     <div class="anon-badge">Anonym</div>
+  </div>
+
+  <div class="ticker-wrap">
+    <div class="ticker-track">
+      <span class="ticker-item">YTTP Functional</span><span class="ticker-dot"></span>
+      <span class="ticker-item">Flandrische Str. 4</span><span class="ticker-dot"></span>
+      <span class="ticker-item">50674 Köln</span><span class="ticker-dot"></span>
+      <span class="ticker-item">Opening Soon</span><span class="ticker-dot"></span>
+      <span class="ticker-item">YTTP Functional</span><span class="ticker-dot"></span>
+      <span class="ticker-item">Flandrische Str. 4</span><span class="ticker-dot"></span>
+      <span class="ticker-item">50674 Köln</span><span class="ticker-dot"></span>
+      <span class="ticker-item">Opening Soon</span><span class="ticker-dot"></span>
+    </div>
   </div>
 
   <div id="loading-screen" class="loading-screen">
@@ -311,7 +374,6 @@
     <div class="headline">Wie war dein Kurs?</div>
     <div class="divider"></div>
 
-    <!-- Sterne -->
     <div class="section-label">Bewertung</div>
     <div class="stars-row">
       <button class="star" data-val="1" onclick="setStar(1)" aria-label="1 Stern">
@@ -331,13 +393,11 @@
       </button>
     </div>
 
-    <!-- Dynamische Fragen werden hier eingefügt -->
     <div id="questions-container"></div>
 
-    <!-- Kommentar -->
     <div class="comment-block">
-      <div class="section-label">Kommentar (optional)</div>
-      <textarea id="comment-field" placeholder="Was hat dir besonders gut gefallen? Was könnten wir verbessern?"></textarea>
+      <div class="section-label">Weitere Anmerkungen (optional)</div>
+      <textarea id="comment-field" placeholder="Was möchtest du uns noch mitteilen?"></textarea>
     </div>
 
     <button class="submit-btn" id="submit-btn" onclick="submitFeedback()">Feedback senden</button>
@@ -356,46 +416,44 @@
 </div>
 
 <script>
+  const QUESTIONS = [
+    {
+      id: 'checkin',
+      label: 'Wie reibungslos war dein Check-in heute?',
+      options: ['Sehr reibungslos', 'Reibungslos', 'Okay', 'Schwierig', 'Sehr schwierig']
+    },
+    {
+      id: 'cleanliness',
+      label: 'Wie sauber war das Studio?',
+      options: ['Sehr sauber', 'Sauber', 'Okay', 'Weniger sauber', 'Nicht sauber']
+    },
+    {
+      id: 'course_quality',
+      label: 'Wie war die Qualität des Kurses?',
+      options: ['Sehr gut', 'Gut', 'Okay', 'Weniger gut', 'Nicht gut']
+    }
+  ];
+
   let studioData = null;
-  let questionsData = [];
   let selectedStars = 0;
   let answers = {};
-
-  // Antwortoptionen pro Frage (key = exakter Fragetext)
-  const ANSWER_OPTIONS = {
-    'Wie war das Tempo des Kurses für dich?': ['Optimal', 'Zu langsam', 'Zu schnell'],
-    'Würdest du diesen Kurs weiterempfehlen?': ['Ja', 'Nein'],
-    'Hat dir die Anleitung durch den Coach geholfen?': ['Ja, sehr', 'In Ordnung', 'Weniger'],
-  };
-
-  // Freitextfelder für diese Fragen
-  const FREETEXT_QUESTIONS = [
-    'Welchen Kurs hast du besucht?',
-    'Welche/r Trainer/in hat den Kurs geleitet?',
-  ];
 
   async function init() {
     const params = new URLSearchParams(window.location.search);
     const slug = params.get('studio');
     if (!slug) { showError('Kein Studio angegeben. Bitte scanne den QR-Code im Studio.'); return; }
-    await loadStudioAndQuestions(slug);
+    await loadStudio(slug);
   }
 
-  async function loadStudioAndQuestions(slug) {
+  async function loadStudio(slug) {
     try {
-      const studioRes = await fetch(
+      const res = await fetch(
         `${SUPABASE_URL}/rest/v1/studios?slug=eq.${encodeURIComponent(slug)}&select=*`,
         { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
       );
-      const studios = await studioRes.json();
+      const studios = await res.json();
       if (!studios.length) { showError('Studio nicht gefunden.'); return; }
       studioData = studios[0];
-
-      const questionsRes = await fetch(
-        `${SUPABASE_URL}/rest/v1/questions?studio_type=eq.${encodeURIComponent(studioData.type)}&active=eq.true&order=position.asc&select=*`,
-        { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
-      );
-      questionsData = await questionsRes.json();
       renderForm();
     } catch (e) {
       showError('Verbindungsfehler. Bitte versuche es erneut.');
@@ -410,7 +468,7 @@
     const container = document.getElementById('questions-container');
     container.innerHTML = '';
 
-    questionsData.forEach((q, i) => {
+    QUESTIONS.forEach((q, i) => {
       const block = document.createElement('div');
       block.className = 'question-block';
 
@@ -422,36 +480,24 @@
       text.className = 'question-text';
       text.textContent = q.label;
 
+      const row = document.createElement('div');
+      row.className = 'likert-row';
+
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'likert-option';
+        btn.innerHTML = `<span class="dot"></span><span class="likert-val">${idx + 1}</span><span>${opt}</span>`;
+        btn.onclick = () => {
+          answers[q.id] = opt;
+          row.querySelectorAll('.likert-option').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+        };
+        row.appendChild(btn);
+      });
+
       block.appendChild(label);
       block.appendChild(text);
-
-      if (FREETEXT_QUESTIONS.includes(q.label)) {
-        // Freitextfeld
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.className = 'text-input';
-        input.placeholder = 'Deine Antwort...';
-        input.addEventListener('input', () => { answers[q.id] = input.value.trim(); });
-        block.appendChild(input);
-      } else {
-        // Auswahlbuttons
-        const opts = ANSWER_OPTIONS[q.label] || ['Ja', 'Nein'];
-        const row = document.createElement('div');
-        row.className = 'options-row';
-        opts.forEach(opt => {
-          const btn = document.createElement('button');
-          btn.className = 'option-btn';
-          btn.textContent = opt;
-          btn.onclick = () => {
-            answers[q.id] = opt;
-            row.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
-            btn.classList.add('selected');
-          };
-          row.appendChild(btn);
-        });
-        block.appendChild(row);
-      }
-
+      block.appendChild(row);
       container.appendChild(block);
     });
   }
@@ -475,18 +521,15 @@
     btn.disabled = true;
     btn.textContent = 'Wird gesendet...';
 
-    // Antworten den Positionen zuordnen
-    const answersArray = questionsData.map(q => answers[q.id] || null);
-
     const payload = {
       studio_id: studioData.id,
       studio_slug: studioData.slug,
       stars: selectedStars,
-      answer_1: answersArray[0] || null,
-      answer_2: answersArray[1] || null,
-      answer_3: answersArray[2] || null,
-      answer_4: answersArray[3] || null,
-      answer_5: answersArray[4] || null,
+      answer_1: answers['checkin'] || null,
+      answer_2: answers['cleanliness'] || null,
+      answer_3: answers['course_quality'] || null,
+      answer_4: null,
+      answer_5: null,
       comment: document.getElementById('comment-field').value.trim() || null,
     };
 
