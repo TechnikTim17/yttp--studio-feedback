@@ -1,3 +1,4 @@
+```html
 <meta charset="UTF-8">
 <html lang="de">
 <head>
@@ -62,6 +63,45 @@
     background: var(--sage);
     border-radius: 50%;
     display: inline-block;
+  }
+
+  .disclaimer-banner {
+    background: var(--anthracite);
+    margin: 14px 0 0;
+    padding: 12px 24px 14px;
+  }
+
+  .disclaimer-address {
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--light-gray);
+    margin-bottom: 8px;
+    line-height: 1.6;
+  }
+
+  .opening-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid var(--sage);
+    padding: 4px 10px;
+  }
+
+  .opening-badge-dot {
+    width: 5px;
+    height: 5px;
+    background: var(--sage);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .opening-badge-text {
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--sage);
+    font-weight: 500;
   }
 
   .container {
@@ -314,6 +354,14 @@
     <div class="anon-badge">Anonym</div>
   </div>
 
+  <div class="disclaimer-banner">
+    <div class="disclaimer-address">YTTP Functional &nbsp;·&nbsp; Flandrische Str. 4 &nbsp;·&nbsp; 50674 Köln</div>
+    <div class="opening-badge">
+      <div class="opening-badge-dot"></div>
+      <div class="opening-badge-text">Opening Soon</div>
+    </div>
+  </div>
+
   <div id="loading-screen" class="loading-screen">
     <div class="spinner"></div>
   </div>
@@ -514,3 +562,6 @@
 </script>
 </body>
 </html>
+```
+
+Alles markieren mit `Cmd+A`, kopieren, in GitHub einfügen → Commit changes.
