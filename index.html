@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -342,7 +343,7 @@
         <polygon points="224.81 788.42 224.81 781.33 224.81 519.93 303.99 104.41 323.89 0 272.1 0 204.56 0 168.34 300.45 165.14 300.45 126.79 0 0 0 99.09 519.93 99.09 781.33 99.09 788.42 224.81 788.42"/>
       </svg>
     </div>
-    <div class="anon-badge">Anonym</div>
+    <div class="anon-badge" id="anon-badge">Anonym</div>
   </div>
 
   <div id="loading-screen" class="loading-screen">
@@ -351,11 +352,11 @@
 
   <div id="form-screen" class="container" style="display:none">
     <div class="studio-label" id="studio-label">Studio</div>
-    <div class="headline">Wie hat dir der Kurs gefallen?</div>
+    <div class="headline" id="headline">Wie hat dir der Kurs gefallen?</div>
     <div class="divider"></div>
 
     <!-- Sterne -->
-    <div class="section-label">Bewertung</div>
+    <div class="section-label" id="rating-label">Bewertung</div>
     <div class="stars-row">
       <button class="star" data-val="1" onclick="setStar(1)" aria-label="1 Stern">
         <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
@@ -376,46 +377,46 @@
 
     <!-- Likert 1: Check-in -->
     <div class="question-block">
-      <div class="section-label">Check-in</div>
-      <div class="question-text">Wie reibungslos war dein Check-in heute?</div>
+      <div class="section-label" id="checkin-label">Check-in</div>
+      <div class="question-text" id="checkin-question">Wie reibungslos war dein Check-in heute?</div>
       <div class="likert-row" id="q-checkin">
-        <button class="likert-btn" onclick="selectLikert('checkin', this)">Sehr reibungslos</button>
-        <button class="likert-btn" onclick="selectLikert('checkin', this)">Reibungslos</button>
-        <button class="likert-btn" onclick="selectLikert('checkin', this)">Okay</button>
-        <button class="likert-btn" onclick="selectLikert('checkin', this)">Holprig</button>
-        <button class="likert-btn" onclick="selectLikert('checkin', this)">Sehr holprig</button>
+        <button class="likert-btn" data-value="Sehr reibungslos" onclick="selectLikert('checkin', this)">Sehr reibungslos</button>
+        <button class="likert-btn" data-value="Reibungslos" onclick="selectLikert('checkin', this)">Reibungslos</button>
+        <button class="likert-btn" data-value="Okay" onclick="selectLikert('checkin', this)">Okay</button>
+        <button class="likert-btn" data-value="Holprig" onclick="selectLikert('checkin', this)">Holprig</button>
+        <button class="likert-btn" data-value="Sehr holprig" onclick="selectLikert('checkin', this)">Sehr holprig</button>
       </div>
     </div>
 
     <!-- Likert 2: Sauberkeit -->
     <div class="question-block">
-      <div class="section-label">Sauberkeit</div>
-      <div class="question-text">Wie sauber war das Studio?</div>
+      <div class="section-label" id="cleanliness-label">Sauberkeit</div>
+      <div class="question-text" id="cleanliness-question">Wie sauber war das Studio?</div>
       <div class="likert-row" id="q-sauberkeit">
-        <button class="likert-btn" onclick="selectLikert('sauberkeit', this)">Sehr sauber</button>
-        <button class="likert-btn" onclick="selectLikert('sauberkeit', this)">Sauber</button>
-        <button class="likert-btn" onclick="selectLikert('sauberkeit', this)">Okay</button>
-        <button class="likert-btn" onclick="selectLikert('sauberkeit', this)">Weniger sauber</button>
-        <button class="likert-btn" onclick="selectLikert('sauberkeit', this)">Nicht sauber</button>
+        <button class="likert-btn" data-value="Sehr sauber" onclick="selectLikert('sauberkeit', this)">Sehr sauber</button>
+        <button class="likert-btn" data-value="Sauber" onclick="selectLikert('sauberkeit', this)">Sauber</button>
+        <button class="likert-btn" data-value="Okay" onclick="selectLikert('sauberkeit', this)">Okay</button>
+        <button class="likert-btn" data-value="Weniger sauber" onclick="selectLikert('sauberkeit', this)">Weniger sauber</button>
+        <button class="likert-btn" data-value="Nicht sauber" onclick="selectLikert('sauberkeit', this)">Nicht sauber</button>
       </div>
     </div>
 
     <!-- Likert 3: Kursqualität -->
     <div class="question-block">
-      <div class="section-label">Kurs</div>
-      <div class="question-text">Wie war die Qualität des Kurses?</div>
+      <div class="section-label" id="class-label">Kurs</div>
+      <div class="question-text" id="class-question">Wie war die Qualität des Kurses?</div>
       <div class="likert-row" id="q-kurs">
-        <button class="likert-btn" onclick="selectLikert('kurs', this)">Sehr gut</button>
-        <button class="likert-btn" onclick="selectLikert('kurs', this)">Gut</button>
-        <button class="likert-btn" onclick="selectLikert('kurs', this)">Okay</button>
-        <button class="likert-btn" onclick="selectLikert('kurs', this)">Weniger gut</button>
-        <button class="likert-btn" onclick="selectLikert('kurs', this)">Nicht gut</button>
+        <button class="likert-btn" data-value="Sehr gut" onclick="selectLikert('kurs', this)">Sehr gut</button>
+        <button class="likert-btn" data-value="Gut" onclick="selectLikert('kurs', this)">Gut</button>
+        <button class="likert-btn" data-value="Okay" onclick="selectLikert('kurs', this)">Okay</button>
+        <button class="likert-btn" data-value="Weniger gut" onclick="selectLikert('kurs', this)">Weniger gut</button>
+        <button class="likert-btn" data-value="Nicht gut" onclick="selectLikert('kurs', this)">Nicht gut</button>
       </div>
     </div>
 
     <!-- Kommentar -->
     <div class="comment-block">
-      <div class="section-label">Weitere Anmerkungen (optional)</div>
+      <div class="section-label" id="comment-label">Weitere Anmerkungen (optional)</div>
       <textarea id="comment-field" placeholder="Was hat dir besonders gut gefallen? Was könnten wir verbessern?"></textarea>
     </div>
 
@@ -429,9 +430,9 @@
         <polyline points="20 6 9 17 4 12"/>
       </svg>
     </div>
-    <div class="success-title">Danke für dein Feedback.</div>
-    <div class="success-sub">Es hilft uns, jeden Kurs<br>besser zu machen.</div>
-    <a href="https://shop.yttp.de/" target="_blank" style="
+    <div class="success-title" id="success-title">Danke für dein Feedback.</div>
+    <div class="success-sub" id="success-sub">Es hilft uns, jeden Kurs<br>besser zu machen.</div>
+    <a href="https://shop.yttp.de/" target="_blank" id="webshop-link" style="
       display: inline-block;
       margin-top: 32px;
       font-family: var(--font);
@@ -449,14 +450,127 @@
 </div>
 
 <script>
+  // ---- Übersetzungen ----
+  // Berlin-Slugs (Präfix "berlin-") bekommen Englisch, alle anderen bleiben Deutsch.
+  // Die gespeicherten Antwortwerte (answer_1/2/3) bleiben in beiden Sprachen die
+  // deutschen Originalwerte (siehe data-value auf den Likert-Buttons), damit
+  // Reporting/Views in Supabase unverändert weiterlaufen. Slugs, URL-Parameter
+  // und QR-Codes werden hier nicht angefasst.
+  const I18N = {
+    de: {
+      anon: 'Anonym',
+      headline: 'Wie hat dir der Kurs gefallen?',
+      rating: 'Bewertung',
+      checkinLabel: 'Check-in',
+      checkinQuestion: 'Wie reibungslos war dein Check-in heute?',
+      checkinOptions: ['Sehr reibungslos', 'Reibungslos', 'Okay', 'Holprig', 'Sehr holprig'],
+      cleanLabel: 'Sauberkeit',
+      cleanQuestion: 'Wie sauber war das Studio?',
+      cleanOptions: ['Sehr sauber', 'Sauber', 'Okay', 'Weniger sauber', 'Nicht sauber'],
+      classLabel: 'Kurs',
+      classQuestion: 'Wie war die Qualität des Kurses?',
+      classOptions: ['Sehr gut', 'Gut', 'Okay', 'Weniger gut', 'Nicht gut'],
+      commentLabel: 'Weitere Anmerkungen (optional)',
+      commentPlaceholder: 'Was hat dir besonders gut gefallen? Was könnten wir verbessern?',
+      submit: 'Feedback senden',
+      submitting: 'Wird gesendet...',
+      errNoStars: 'Bitte gib eine Sternebewertung ab.',
+      errGeneric: 'Etwas ist schiefgelaufen. Bitte versuche es erneut.',
+      errNoSlug: 'Kein Studio angegeben. Bitte scanne den QR-Code im Studio.',
+      errNoStudio: 'Studio nicht gefunden.',
+      errConnection: 'Verbindungsfehler. Bitte versuche es erneut.',
+      successTitle: 'Danke für dein Feedback.',
+      successSub: 'Es hilft uns, jeden Kurs<br>besser zu machen.',
+      webshop: "Hier geht's zum Webshop",
+      starAria: n => `${n} Stern${n > 1 ? 'e' : ''}`,
+    },
+    en: {
+      anon: 'Anonymous',
+      headline: 'How did you enjoy the class?',
+      rating: 'Rating',
+      checkinLabel: 'Check-in',
+      checkinQuestion: 'How smooth was your check-in today?',
+      checkinOptions: ['Very smooth', 'Smooth', 'Okay', 'Bumpy', 'Very bumpy'],
+      cleanLabel: 'Cleanliness',
+      cleanQuestion: 'How clean was the studio?',
+      cleanOptions: ['Very clean', 'Clean', 'Okay', 'Less clean', 'Not clean'],
+      classLabel: 'Class',
+      classQuestion: 'How was the quality of the class?',
+      classOptions: ['Very good', 'Good', 'Okay', 'Less good', 'Not good'],
+      commentLabel: 'Additional comments (optional)',
+      commentPlaceholder: 'What did you like most? What could we improve?',
+      submit: 'Send feedback',
+      submitting: 'Sending...',
+      errNoStars: 'Please give a star rating.',
+      errGeneric: 'Something went wrong. Please try again.',
+      errNoSlug: 'No studio specified. Please scan the QR code in the studio.',
+      errNoStudio: 'Studio not found.',
+      errConnection: 'Connection error. Please try again.',
+      successTitle: 'Thank you for your feedback.',
+      successSub: 'It helps us make<br>every class better.',
+      webshop: 'Go to our webshop',
+      starAria: n => `${n} star${n > 1 ? 's' : ''}`,
+    },
+  };
+
   let studioData = null;
   let selectedStars = 0;
   let likertAnswers = { checkin: null, sauberkeit: null, kurs: null };
+  let T = I18N.de;
+
+  function applyLanguage(lang) {
+    T = I18N[lang] || I18N.de;
+    document.documentElement.lang = lang;
+
+    document.getElementById('anon-badge').textContent = T.anon;
+    document.getElementById('headline').textContent = T.headline;
+    document.getElementById('rating-label').textContent = T.rating;
+
+    document.getElementById('checkin-label').textContent = T.checkinLabel;
+    document.getElementById('checkin-question').textContent = T.checkinQuestion;
+    setLikertLabels('q-checkin', T.checkinOptions);
+
+    document.getElementById('cleanliness-label').textContent = T.cleanLabel;
+    document.getElementById('cleanliness-question').textContent = T.cleanQuestion;
+    setLikertLabels('q-sauberkeit', T.cleanOptions);
+
+    document.getElementById('class-label').textContent = T.classLabel;
+    document.getElementById('class-question').textContent = T.classQuestion;
+    setLikertLabels('q-kurs', T.classOptions);
+
+    document.getElementById('comment-label').textContent = T.commentLabel;
+    document.getElementById('comment-field').placeholder = T.commentPlaceholder;
+
+    document.getElementById('submit-btn').textContent = T.submit;
+
+    document.getElementById('success-title').textContent = T.successTitle;
+    document.getElementById('success-sub').innerHTML = T.successSub;
+    document.getElementById('webshop-link').textContent = T.webshop;
+
+    document.querySelectorAll('.star').forEach(el => {
+      const n = parseInt(el.dataset.val, 10);
+      el.setAttribute('aria-label', T.starAria(n));
+    });
+  }
+
+  // Setzt nur den sichtbaren Text der Likert-Buttons neu.
+  // data-value (deutscher Originalwert) bleibt unverändert und wird beim
+  // Absenden ans Backend geschickt, unabhängig von der Anzeigesprache.
+  function setLikertLabels(rowId, labels) {
+    const buttons = document.querySelectorAll(`#${rowId} .likert-btn`);
+    buttons.forEach((btn, i) => {
+      if (labels[i]) btn.textContent = labels[i];
+    });
+  }
 
   async function init() {
     const params = new URLSearchParams(window.location.search);
     const slug = params.get('studio');
-    if (!slug) { showError('Kein Studio angegeben. Bitte scanne den QR-Code im Studio.'); return; }
+
+    const lang = slug && slug.toLowerCase().startsWith('berlin-') ? 'en' : 'de';
+    applyLanguage(lang);
+
+    if (!slug) { showError(T.errNoSlug); return; }
     await loadStudio(slug);
   }
 
@@ -467,13 +581,13 @@
         { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
       );
       const studios = await res.json();
-      if (!studios.length) { showError('Studio nicht gefunden.'); return; }
+      if (!studios.length) { showError(T.errNoStudio); return; }
       studioData = studios[0];
       document.getElementById('loading-screen').style.display = 'none';
       document.getElementById('form-screen').style.display = 'block';
       document.getElementById('studio-label').textContent = studioData.name;
     } catch (e) {
-      showError('Verbindungsfehler. Bitte versuche es erneut.');
+      showError(T.errConnection);
     }
   }
 
@@ -485,7 +599,7 @@
   }
 
   function selectLikert(key, btn) {
-    likertAnswers[key] = btn.textContent;
+    likertAnswers[key] = btn.dataset.value;
     btn.closest('.likert-row').querySelectorAll('.likert-btn').forEach(b => b.classList.remove('selected'));
     btn.classList.add('selected');
   }
@@ -493,14 +607,14 @@
   async function submitFeedback() {
     if (!selectedStars) {
       const err = document.getElementById('error-msg');
-      err.textContent = 'Bitte gib eine Sternebewertung ab.';
+      err.textContent = T.errNoStars;
       err.classList.add('visible');
       return;
     }
 
     const btn = document.getElementById('submit-btn');
     btn.disabled = true;
-    btn.textContent = 'Wird gesendet...';
+    btn.textContent = T.submitting;
 
     const payload = {
       studio_id: studioData.id,
@@ -530,9 +644,9 @@
       document.getElementById('success-screen').classList.add('visible');
     } catch (e) {
       btn.disabled = false;
-      btn.textContent = 'Feedback senden';
+      btn.textContent = T.submit;
       const err = document.getElementById('error-msg');
-      err.textContent = 'Etwas ist schiefgelaufen. Bitte versuche es erneut.';
+      err.textContent = T.errGeneric;
       err.classList.add('visible');
     }
   }
