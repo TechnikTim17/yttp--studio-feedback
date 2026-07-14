@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -564,3 +565,97 @@
   async function init() {
     const params = new URLSearchParams(window.location.search);
     const slug = params.get('studio');
+
+    const lang = slug && slug.toLowerCase().startsWith('berlin-') ? 'en' : 'de';
+    applyLanguage(lang);
+
+    if (!slug) { showError(T.errNoSlug); return; }
+    await loadStudio(slug);
+  }
+
+  async function loadStudio(slug) {
+    try {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/studios?slug=eq.${encodeURIComponent(slug)}&select=*`,
+        { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
+      );
+      const studios = await res.json();
+      if (!studios.length) { showError(T.errNoStudio); return; }
+      studioData = studios[0];
+      document.getElementById('loading-screen').style.display = 'none';
+      document.getElementById('form-screen').style.display = 'block';
+      document.getElementById('studio-label').textContent = studioData.name;
+    } catch (e) {
+      showError(T.errConnection);
+    }
+  }
+
+  function setStar(val) {
+    selectedStars = val;
+    document.querySelectorAll('.star').forEach(s => {
+      s.classList.toggle('active', parseInt(s.dataset.val) <= val);
+    });
+  }
+
+  function selectLikert(key, btn) {
+    likertAnswers[key] = btn.dataset.value;
+    btn.closest('.likert-row').querySelectorAll('.likert-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+  }
+
+  async function submitFeedback() {
+    if (!selectedStars) {
+      const err = document.getElementById('error-msg');
+      err.textContent = T.errNoStars;
+      err.classList.add('visible');
+      return;
+    }
+
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.textContent = T.submitting;
+
+    const payload = {
+      studio_id: studioData.id,
+      studio_slug: studioData.slug,
+      stars: selectedStars,
+      answer_1: likertAnswers.checkin,
+      answer_2: likertAnswers.sauberkeit,
+      answer_3: likertAnswers.kurs,
+      answer_4: null,
+      answer_5: null,
+      comment: document.getElementById('comment-field').value.trim() || null,
+    };
+
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/feedback`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal',
+        },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error('API error');
+      document.getElementById('form-screen').style.display = 'none';
+      document.getElementById('success-screen').classList.add('visible');
+    } catch (e) {
+      btn.disabled = false;
+      btn.textContent = T.submit;
+      const err = document.getElementById('error-msg');
+      err.textContent = T.errGeneric;
+      err.classList.add('visible');
+    }
+  }
+
+  function showError(msg) {
+    document.getElementById('loading-screen').innerHTML =
+      `<div style="text-align:center;padding:24px;font-size:13px;color:var(--taupe)">${msg}</div>`;
+  }
+
+  init();
+</script>
+</body>
+</html>
