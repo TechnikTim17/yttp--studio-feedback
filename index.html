@@ -374,53 +374,59 @@
       </button>
     </div>
 
-    <!-- Likert 1: Check-in -->
-    <div class="question-block">
-      <div class="section-label" id="checkin-label">Check-in</div>
-      <div class="question-text" id="checkin-question">Wie reibungslos war dein Check-in heute?</div>
-      <div class="likert-row" id="q-checkin">
-        <button class="likert-btn" data-value="Sehr reibungslos" onclick="selectLikert('checkin', this)">Sehr reibungslos</button>
-        <button class="likert-btn" data-value="Reibungslos" onclick="selectLikert('checkin', this)">Reibungslos</button>
-        <button class="likert-btn" data-value="Okay" onclick="selectLikert('checkin', this)">Okay</button>
-        <button class="likert-btn" data-value="Holprig" onclick="selectLikert('checkin', this)">Holprig</button>
-        <button class="likert-btn" data-value="Sehr holprig" onclick="selectLikert('checkin', this)">Sehr holprig</button>
+    <!-- Zusätzliche Fragen: werden nur bei Studios mit google_review_url per
+         JS ausgeblendet und erst bei 4 Sternen oder weniger eingeblendet.
+         Für alle Studios ohne google_review_url bleibt dieser Block immer
+         sichtbar (unverändertes Verhalten wie bisher). -->
+    <div id="extra-questions">
+      <!-- Likert 1: Check-in -->
+      <div class="question-block">
+        <div class="section-label" id="checkin-label">Check-in</div>
+        <div class="question-text" id="checkin-question">Wie reibungslos war dein Check-in heute?</div>
+        <div class="likert-row" id="q-checkin">
+          <button class="likert-btn" data-value="Sehr reibungslos" onclick="selectLikert('checkin', this)">Sehr reibungslos</button>
+          <button class="likert-btn" data-value="Reibungslos" onclick="selectLikert('checkin', this)">Reibungslos</button>
+          <button class="likert-btn" data-value="Okay" onclick="selectLikert('checkin', this)">Okay</button>
+          <button class="likert-btn" data-value="Holprig" onclick="selectLikert('checkin', this)">Holprig</button>
+          <button class="likert-btn" data-value="Sehr holprig" onclick="selectLikert('checkin', this)">Sehr holprig</button>
+        </div>
       </div>
-    </div>
 
-    <!-- Likert 2: Sauberkeit -->
-    <div class="question-block">
-      <div class="section-label" id="cleanliness-label">Sauberkeit</div>
-      <div class="question-text" id="cleanliness-question">Wie sauber war das Studio?</div>
-      <div class="likert-row" id="q-sauberkeit">
-        <button class="likert-btn" data-value="Sehr sauber" onclick="selectLikert('sauberkeit', this)">Sehr sauber</button>
-        <button class="likert-btn" data-value="Sauber" onclick="selectLikert('sauberkeit', this)">Sauber</button>
-        <button class="likert-btn" data-value="Okay" onclick="selectLikert('sauberkeit', this)">Okay</button>
-        <button class="likert-btn" data-value="Weniger sauber" onclick="selectLikert('sauberkeit', this)">Weniger sauber</button>
-        <button class="likert-btn" data-value="Nicht sauber" onclick="selectLikert('sauberkeit', this)">Nicht sauber</button>
+      <!-- Likert 2: Sauberkeit -->
+      <div class="question-block">
+        <div class="section-label" id="cleanliness-label">Sauberkeit</div>
+        <div class="question-text" id="cleanliness-question">Wie sauber war das Studio?</div>
+        <div class="likert-row" id="q-sauberkeit">
+          <button class="likert-btn" data-value="Sehr sauber" onclick="selectLikert('sauberkeit', this)">Sehr sauber</button>
+          <button class="likert-btn" data-value="Sauber" onclick="selectLikert('sauberkeit', this)">Sauber</button>
+          <button class="likert-btn" data-value="Okay" onclick="selectLikert('sauberkeit', this)">Okay</button>
+          <button class="likert-btn" data-value="Weniger sauber" onclick="selectLikert('sauberkeit', this)">Weniger sauber</button>
+          <button class="likert-btn" data-value="Nicht sauber" onclick="selectLikert('sauberkeit', this)">Nicht sauber</button>
+        </div>
       </div>
-    </div>
 
-    <!-- Likert 3: Kursqualität -->
-    <div class="question-block">
-      <div class="section-label" id="class-label">Kurs</div>
-      <div class="question-text" id="class-question">Wie war die Qualität des Kurses?</div>
-      <div class="likert-row" id="q-kurs">
-        <button class="likert-btn" data-value="Sehr gut" onclick="selectLikert('kurs', this)">Sehr gut</button>
-        <button class="likert-btn" data-value="Gut" onclick="selectLikert('kurs', this)">Gut</button>
-        <button class="likert-btn" data-value="Okay" onclick="selectLikert('kurs', this)">Okay</button>
-        <button class="likert-btn" data-value="Weniger gut" onclick="selectLikert('kurs', this)">Weniger gut</button>
-        <button class="likert-btn" data-value="Nicht gut" onclick="selectLikert('kurs', this)">Nicht gut</button>
+      <!-- Likert 3: Kursqualität -->
+      <div class="question-block">
+        <div class="section-label" id="class-label">Kurs</div>
+        <div class="question-text" id="class-question">Wie war die Qualität des Kurses?</div>
+        <div class="likert-row" id="q-kurs">
+          <button class="likert-btn" data-value="Sehr gut" onclick="selectLikert('kurs', this)">Sehr gut</button>
+          <button class="likert-btn" data-value="Gut" onclick="selectLikert('kurs', this)">Gut</button>
+          <button class="likert-btn" data-value="Okay" onclick="selectLikert('kurs', this)">Okay</button>
+          <button class="likert-btn" data-value="Weniger gut" onclick="selectLikert('kurs', this)">Weniger gut</button>
+          <button class="likert-btn" data-value="Nicht gut" onclick="selectLikert('kurs', this)">Nicht gut</button>
+        </div>
       </div>
-    </div>
 
-    <!-- Kommentar -->
-    <div class="comment-block">
-      <div class="section-label" id="comment-label">Weitere Anmerkungen (optional)</div>
-      <textarea id="comment-field" placeholder="Was hat dir besonders gut gefallen? Was könnten wir verbessern?"></textarea>
-    </div>
+      <!-- Kommentar -->
+      <div class="comment-block">
+        <div class="section-label" id="comment-label">Weitere Anmerkungen (optional)</div>
+        <textarea id="comment-field" placeholder="Was hat dir besonders gut gefallen? Was könnten wir verbessern?"></textarea>
+      </div>
 
-    <button class="submit-btn" id="submit-btn" onclick="submitFeedback()">Feedback senden</button>
-    <div class="error-msg" id="error-msg"></div>
+      <button class="submit-btn" id="submit-btn" onclick="submitFeedback()">Feedback senden</button>
+      <div class="error-msg" id="error-msg"></div>
+    </div>
   </div>
 
   <div id="success-screen" class="success-screen">
@@ -585,6 +591,13 @@
       document.getElementById('loading-screen').style.display = 'none';
       document.getElementById('form-screen').style.display = 'block';
       document.getElementById('studio-label').textContent = studioData.name;
+
+      // Nur Studios mit hinterlegtem Google-Bewertungslink bekommen den
+      // neuen Ablauf (Fragen zunächst ausgeblendet, 5 Sterne = Redirect zu
+      // Google). Alle anderen Studios verhalten sich exakt wie bisher.
+      if (studioData.google_review_url) {
+        document.getElementById('extra-questions').style.display = 'none';
+      }
     } catch (e) {
       showError(T.errConnection);
     }
@@ -595,6 +608,55 @@
     document.querySelectorAll('.star').forEach(s => {
       s.classList.toggle('active', parseInt(s.dataset.val) <= val);
     });
+
+    if (studioData && studioData.google_review_url) {
+      if (val === 5) {
+        redirectToGoogleReview();
+      } else {
+        document.getElementById('extra-questions').style.display = 'block';
+      }
+    }
+  }
+
+  let redirecting = false;
+
+  // Speichert eine minimale 5-Sterne-Bewertung (ohne die übrigen Fragen,
+  // die in diesem Fall nicht gestellt werden) und leitet danach zur
+  // hinterlegten Google-Bewertungsseite des Studios weiter. Ein Fehler beim
+  // Speichern blockiert die Weiterleitung nicht, damit der Gast in jedem
+  // Fall zu Google kommt.
+  async function redirectToGoogleReview() {
+    if (redirecting) return;
+    redirecting = true;
+
+    const payload = {
+      studio_id: studioData.id,
+      studio_slug: studioData.slug,
+      stars: 5,
+      answer_1: null,
+      answer_2: null,
+      answer_3: null,
+      answer_4: null,
+      answer_5: null,
+      comment: null,
+    };
+
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/feedback`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal',
+        },
+        body: JSON.stringify(payload),
+      });
+    } catch (e) {
+      // bewusst ignoriert, siehe Kommentar oben
+    } finally {
+      window.location.href = studioData.google_review_url;
+    }
   }
 
   function selectLikert(key, btn) {
