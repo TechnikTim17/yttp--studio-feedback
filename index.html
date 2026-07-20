@@ -624,11 +624,37 @@
           'apikey': SUPABASE_ANON_KEY,
           'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json',
-          'Prefer': 'return=minimal',
+          'Prefer': 'return=representation',
         },
         body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error('API error');
+
+      // Lehrer-Zuordnung anstoßen (ordnet den Feedback-Eintrag dem zuletzt
+      // beendeten Kurs an diesem Studio zu). Läuft serverseitig in einer
+      // Supabase Edge Function, bewusst nicht abgewartet: das Gäste-Erlebnis
+      // darf nicht von bSport-Erreichbarkeit abhängen.
+      try {
+        const insertedRows = await res.json();
+        const feedbackId = Array.isArray(insertedRows) && insertedRows[0] ? insertedRows[0].id : null;
+        if (feedbackId) {
+          fetch(`${SUPABASE_URL}/functions/v1/attribute-teacher`, {
+            method: 'POST',
+            headers: {
+              'apikey': SUPABASE_ANON_KEY,
+              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              feedback_id: feedbackId,
+              studio_slug: studioData.slug,
+              submitted_at: new Date().toISOString(),
+            }),
+          }).catch(() => {});
+        }
+      } catch (e) {
+        // Zuordnung ist rein intern/optional, darf den Feedback-Flow nie stören.
+      }
 
       // Bei 5 Sternen und hinterlegtem Google-Link: nach dem Speichern
       // direkt zur Google-Bewertungsseite des Studios weiterleiten, statt
