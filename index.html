@@ -374,10 +374,9 @@
       </button>
     </div>
 
-    <!-- Zusätzliche Fragen: werden nur bei Studios mit google_review_url per
-         JS ausgeblendet und erst bei 4 Sternen oder weniger eingeblendet.
-         Für alle Studios ohne google_review_url bleibt dieser Block immer
-         sichtbar (unverändertes Verhalten wie bisher). -->
+    <!-- Fragen sind für alle Sterne-Werte immer sichtbar. Die Weiterleitung
+         zu Google (bei 5 Sternen und hinterlegtem google_review_url) passiert
+         erst nach dem Klick auf "Feedback senden", siehe submitFeedback(). -->
     <div id="extra-questions">
       <!-- Likert 1: Check-in -->
       <div class="question-block">
@@ -437,20 +436,6 @@
     </div>
     <div class="success-title" id="success-title">Danke für dein Feedback.</div>
     <div class="success-sub" id="success-sub">Es hilft uns, jeden Kurs<br>besser zu machen.</div>
-    <a href="https://shop.yttp.de/" target="_blank" id="webshop-link" style="
-      display: inline-block;
-      margin-top: 32px;
-      font-family: var(--font);
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--off-white);
-      background: var(--anthracite);
-      padding: 14px 28px;
-      text-decoration: none;
-      transition: background 0.15s;
-    ">Hier geht's zum Webshop</a>
   </div>
 </div>
 
@@ -550,7 +535,6 @@
 
     document.getElementById('success-title').textContent = T.successTitle;
     document.getElementById('success-sub').innerHTML = T.successSub;
-    document.getElementById('webshop-link').textContent = T.webshop;
 
     document.querySelectorAll('.star').forEach(el => {
       const n = parseInt(el.dataset.val, 10);
@@ -591,13 +575,6 @@
       document.getElementById('loading-screen').style.display = 'none';
       document.getElementById('form-screen').style.display = 'block';
       document.getElementById('studio-label').textContent = studioData.name;
-
-      // Nur Studios mit hinterlegtem Google-Bewertungslink bekommen den
-      // neuen Ablauf (Fragen zunächst ausgeblendet, 5 Sterne = Redirect zu
-      // Google). Alle anderen Studios verhalten sich exakt wie bisher.
-      if (studioData.google_review_url) {
-        document.getElementById('extra-questions').style.display = 'none';
-      }
     } catch (e) {
       showError(T.errConnection);
     }
@@ -608,55 +585,6 @@
     document.querySelectorAll('.star').forEach(s => {
       s.classList.toggle('active', parseInt(s.dataset.val) <= val);
     });
-
-    if (studioData && studioData.google_review_url) {
-      if (val === 5) {
-        redirectToGoogleReview();
-      } else {
-        document.getElementById('extra-questions').style.display = 'block';
-      }
-    }
-  }
-
-  let redirecting = false;
-
-  // Speichert eine minimale 5-Sterne-Bewertung (ohne die übrigen Fragen,
-  // die in diesem Fall nicht gestellt werden) und leitet danach zur
-  // hinterlegten Google-Bewertungsseite des Studios weiter. Ein Fehler beim
-  // Speichern blockiert die Weiterleitung nicht, damit der Gast in jedem
-  // Fall zu Google kommt.
-  async function redirectToGoogleReview() {
-    if (redirecting) return;
-    redirecting = true;
-
-    const payload = {
-      studio_id: studioData.id,
-      studio_slug: studioData.slug,
-      stars: 5,
-      answer_1: null,
-      answer_2: null,
-      answer_3: null,
-      answer_4: null,
-      answer_5: null,
-      comment: null,
-    };
-
-    try {
-      await fetch(`${SUPABASE_URL}/rest/v1/feedback`, {
-        method: 'POST',
-        headers: {
-          'apikey': SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-          'Content-Type': 'application/json',
-          'Prefer': 'return=minimal',
-        },
-        body: JSON.stringify(payload),
-      });
-    } catch (e) {
-      // bewusst ignoriert, siehe Kommentar oben
-    } finally {
-      window.location.href = studioData.google_review_url;
-    }
   }
 
   function selectLikert(key, btn) {
@@ -701,6 +629,16 @@
         body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error('API error');
+
+      // Bei 5 Sternen und hinterlegtem Google-Link: nach dem Speichern
+      // direkt zur Google-Bewertungsseite des Studios weiterleiten, statt
+      // die eigene Dankes-Seite zu zeigen. Alle anderen Fälle (1-4 Sterne,
+      // oder 5 Sterne ohne hinterlegten Link) zeigen die normale Dankes-Seite.
+      if (selectedStars === 5 && studioData.google_review_url) {
+        window.location.href = studioData.google_review_url;
+        return;
+      }
+
       document.getElementById('form-screen').style.display = 'none';
       document.getElementById('success-screen').classList.add('visible');
     } catch (e) {
