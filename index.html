@@ -325,11 +325,11 @@
   const FEEDBACK_BASE_URL = 'https://techniktim17.github.io/yttp--studio-feedback';
 </script>
 
-<!-- TICKER — Inhalt hier anpassen -->
-<div class="ticker-wrap">
-  <div class="ticker-track">
-    <div class="ticker-item">Opening Soon <span class="ticker-dot"></span> YTTP Functional <span class="ticker-dot"></span> Flandrische Str. 4 <span class="ticker-dot"></span> 50674 Köln <span class="ticker-dot"></span> Opening Soon <span class="ticker-dot"></span> YTTP Functional <span class="ticker-dot"></span> Flandrische Str. 4 <span class="ticker-dot"></span> 50674 Köln <span class="ticker-dot"></span> Opening Soon <span class="ticker-dot"></span> YTTP Functional <span class="ticker-dot"></span> Flandrische Str. 4 <span class="ticker-dot"></span> 50674 Köln <span class="ticker-dot"></span> Opening Soon <span class="ticker-dot"></span> YTTP Functional <span class="ticker-dot"></span> Flandrische Str. 4 <span class="ticker-dot"></span> 50674 Köln <span class="ticker-dot"></span></div>
-  </div>
+<!-- TICKER — Inhalt wird je nach Studio-Slug per JS befüllt, siehe setupTicker().
+     Berlin: "YTTP Strength Berlin Ku'damm", Köln: "YTTP Strength Belgisches Viertel",
+     Hamburg/unbekannt: Banner bleibt ausgeblendet. -->
+<div class="ticker-wrap" id="ticker-wrap" style="display:none">
+  <div class="ticker-track" id="ticker-track"></div>
 </div>
 
 <div id="feedback-app">
@@ -552,12 +552,43 @@
     });
   }
 
+  // Ticker-Banner ist je Stadt unterschiedlich (nicht je einzelnem Studio):
+  // Berlin bewirbt YTTP Strength Ku'damm, Köln bewirbt YTTP Strength Belgisches
+  // Viertel. Hamburg (und alles Unbekannte) zeigt aktuell keinen Banner, bis es
+  // einen eigenen Inhalt dafür gibt.
+  function buildTickerHTML(segments) {
+    const dot = '<span class="ticker-dot"></span>';
+    const item = segments.join(' ' + dot + ' ') + ' ' + dot + ' ';
+    return item.repeat(4).trim();
+  }
+
+  function setupTicker(slug) {
+    const wrap = document.getElementById('ticker-wrap');
+    const track = document.getElementById('ticker-track');
+    const lower = (slug || '').toLowerCase();
+    let segments = null;
+
+    if (lower.startsWith('berlin-')) {
+      segments = ['Opening Soon', "YTTP Strength", "Berlin Ku'damm"];
+    } else if (lower.startsWith('koeln-')) {
+      segments = ['Opening Soon', 'YTTP Strength', 'Belgisches Viertel', '50674 Köln'];
+    }
+
+    if (segments) {
+      track.innerHTML = buildTickerHTML(segments);
+      wrap.style.display = '';
+    } else {
+      wrap.style.display = 'none';
+    }
+  }
+
   async function init() {
     const params = new URLSearchParams(window.location.search);
     const slug = params.get('studio');
 
     const lang = slug && slug.toLowerCase().startsWith('berlin-') ? 'en' : 'de';
     applyLanguage(lang);
+    setupTicker(slug);
 
     if (!slug) { showError(T.errNoSlug); return; }
     await loadStudio(slug);
