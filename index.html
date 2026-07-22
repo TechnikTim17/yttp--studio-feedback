@@ -559,7 +559,7 @@
   function buildTickerHTML(segments) {
     const dot = '<span class="ticker-dot"></span>';
     const item = segments.join(' ' + dot + ' ') + ' ' + dot + ' ';
-    return item.repeat(4).trim();
+    return '<div class="ticker-item">' + item.repeat(4).trim() + '</div>';
   }
 
   function setupTicker(slug) {
