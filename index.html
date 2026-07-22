@@ -590,6 +590,17 @@
     applyLanguage(lang);
     setupTicker(slug);
 
+    // Kommt jemand per Zurück-Button auf diese Seite zurück (z.B. nach der
+    // Weiterleitung zur Google-Bewertungsseite bei 5 Sternen), soll wieder
+    // die Danke-Seite erscheinen statt erneut das leere/ausgefüllte Formular.
+    // Der Marker "submitted=1" wird in submitFeedback() per history.replaceState
+    // gesetzt, verändert also nie den ursprünglichen QR-Code-Link selbst.
+    if (params.get('submitted') === '1') {
+      document.getElementById('loading-screen').style.display = 'none';
+      document.getElementById('success-screen').classList.add('visible');
+      return;
+    }
+
     if (!slug) { showError(T.errNoSlug); return; }
     await loadStudio(slug);
   }
@@ -690,6 +701,21 @@
         }),
       }).catch(() => {});
 
+      // Formular immer sofort durch die Danke-Seite ersetzen und die aktuelle
+      // Verlaufs-URL auf "submitted=1" umschreiben (history.replaceState,
+      // keine neue Verlaufs-Station, der QR-Code-Link selbst bleibt unberührt).
+      // So zeigt ein Zurück-Klick im Browser — auch nach einer Weiterleitung
+      // zu Google — wieder die Danke-Seite statt des Formulars.
+      document.getElementById('form-screen').style.display = 'none';
+      document.getElementById('success-screen').classList.add('visible');
+      try {
+        const submittedUrl = new URL(window.location.href);
+        submittedUrl.searchParams.set('submitted', '1');
+        window.history.replaceState({ submitted: true }, '', submittedUrl.toString());
+      } catch (e) {
+        // Verlaufs-Markierung ist rein kosmetisch, darf den Feedback-Flow nie stören.
+      }
+
       // Bei 5 Sternen und hinterlegtem Google-Link: nach dem Speichern
       // direkt zur Google-Bewertungsseite des Studios weiterleiten, statt
       // die eigene Dankes-Seite zu zeigen. Alle anderen Fälle (1-4 Sterne,
@@ -698,9 +724,6 @@
         window.location.href = studioData.google_review_url;
         return;
       }
-
-      document.getElementById('form-screen').style.display = 'none';
-      document.getElementById('success-screen').classList.add('visible');
     } catch (e) {
       btn.disabled = false;
       btn.textContent = T.submit;
